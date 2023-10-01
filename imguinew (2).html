@@ -1,0 +1,1352 @@
+<!-- 会用用，不会用垃圾吧倒 -->
+
+<!DOCTYPE html>
+<html>
+<header>
+	<title>h5imgui</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="https://unpkg.com/element-ui@2.15.7/lib/theme-chalk/index.css">
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
+	<script src="https://unpkg.com/element-ui@2.15.7/lib/index.js"></script>
+
+	<style>
+		* {
+			padding: 0;
+			margin: 0;
+		}
+
+		.ayimgui {
+			position: fixed;
+			width: 360px;
+			height: 320px;
+			top: calc(50% - 180px);
+			left: calc(50% - 180px);
+			z-index: 999;
+			background-color: #000000e1;
+			/* border-radius: 8px; */
+			overflow: hidden;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		.onlyTitle {
+			height: 21px !important;
+		}
+
+		.ayimgui .aytitle {
+    padding: 0 5px;
+    font-size: 16px;
+    background-image: linear-gradient(to right, #003cff, #008cff); /* Gradient od #003cff do #008cff */
+    color: white; /* Ustaw kolor tekstu na biały lub inny kontrastujący kolor */
+}
+
+
+		.ayimgui .aytitle .titleClose {
+			position: absolute;
+			top: 3px;
+			right: 6px;
+			color: #ffffff;
+		}
+
+		.ayimgui .aytitle .titleClose:hover {
+			color: #f8f8f8;
+		}
+
+		.ayimgui .aybody {
+			padding: 15px;
+			height: calc(100% - 21px - 15px - 15px);
+			/*减去标题高度，减去上线padding高度*/
+			overflow: auto;
+			font-size: 14px;
+		}
+
+
+		.aytext {
+			width: 100%;
+			margin-bottom: 10px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-around;
+			color: #ffffff;
+		}
+
+		.el-checkbox {
+			margin: 0px;
+		}
+
+		.el-checkbox__label {
+			color: #000;
+		}
+
+		.el-checkbox__input.is-checked+.el-checkbox__label {
+			color: #409EFF;
+		}
+
+		.el-checkbox__inner {
+			background-color: rgb(254, 254, 254);
+			border: none;
+		}
+
+
+		.el-radio {
+			margin: 8px 0;
+		}
+
+		.el-radio__label {
+			color: #000;
+		}
+
+		.el-radio__input.is-checked+.el-radio__label {
+			color: #409EFF;
+		}
+
+		.el-radio__inner {
+			background-color: rgb(254, 254, 254);
+			border: none;
+		}
+		.custom-button {
+            border: 5em;
+            cursor: pointer;
+            outline: none;
+            font-size: 11px;
+            -webkit-transform: translate(0);
+            transform: translate(0);
+            background-image: linear-gradient(45deg, #003cff, #008cff);
+            padding: 0.7em 1em;
+            border-radius: 65px;
+            box-shadow: 1px 1px 10px rgba(0, 89, 255, 0.808);
+            transition: box-shadow 0.25s;
+            color: rgb(255, 255, 255);
+            position: relative;
+        }
+
+        .custom-button .text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(45deg, #008cff, #003cff);
+        }
+
+        .custom-button::after {
+            content: "";
+            border-radius: 18px;
+            position: absolute;
+            margin: 4px;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            z-index: -1;
+            background: #0e0e10;
+        }
+
+        .custom-button:hover {
+            background-image: linear-gradient(-45deg,#003cff, #008cff);
+            box-shadow: 0 12px 24px rgba(128, 128, 128, 0.1);
+        }
+
+        .custom-button:hover .text {
+            background-image: linear-gradient(-45deg, #008cff, #003cff);
+        }
+
+        .custom-button:hover {
+            background-color: #0051ff;
+            color: white;
+        }
+		.el-radio__input.is-checked .el-radio__inner {
+			background-color: rgb(254, 254, 254);
+		}
+
+		.el-radio__inner::after {
+			width: 10px;
+			height: 10px;
+			background-color: rgb(58, 138, 247);
+		}
+
+		.onlySelect {
+			background-color: rgb(254, 254, 254);
+			border: none;
+		}
+
+		.onlySelect .el-select-dropdown__item {
+			color: #000;
+
+		}
+
+		.onlySelect .el-select-dropdown__item.hover,
+		.el-select-dropdown__item:hover:hover {
+			background-color: transparent;
+		}
+
+		.onlySelect .popper__arrow {
+			border-bottom-color: rgb(252, 252, 252) !important;
+		}
+
+		.onlySelect.el-popper[x-placement^=bottom] .popper__arrow::after {
+			border-bottom-color: rgb(8254, 254, 254) !important;
+		}
+
+		.el-select {
+			width: 100%;
+		}
+
+		.el-select .el-input {
+			background-color: rgb(254, 254, 254);
+		}
+
+		.el-select .el-input__suffix {
+			background-color: rgb(160, 196, 243);
+			color: #000;
+			right: 0;
+		}
+
+		.el-select .el-select__caret {
+			color: #000;
+		}
+
+		.el-select .el-input__inner {
+			background-color: transparent;
+			border: none;
+			color: #000;
+		}
+
+		.el-select .el-input .el-select__caret {
+			color: #000;
+		}
+
+		/* 解决ios下拉需要点两次 */
+		.el-scrollbar .el-scrollbar__bar {
+			opacity: 1 !important;
+		}
+
+		.el-button {
+			font-size: 14px;
+			padding: 5px 10px;
+			line-height: 14px;
+			color: #000;
+			background-color: #B8D1F2;
+		}
+
+		.el-button:hover {
+			opacity: .7;
+			color: #000;
+			background-color: #ffffff;
+		}
+
+		.el-button:focus,
+		.el-button:hover {
+			color: #000;
+			background-color: #0c67df;
+		}
+
+		.aycollapse {
+			width: 100%;
+			font-size: 14px;
+			background-color: rgb(0, 109, 235);
+			color: #000;
+		}
+
+		.aytab {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    border-bottom: 2px solid #0a0a0a00;
+    position: relative; /* Ustaw pozycję na relative, aby móc zastosować pseudoelement ::after */
+}
+
+.aytab::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px; /* Grubość granicy musi odpowiadać grubości border-bottom */
+    background-image: linear-gradient(to right, #003cff, #008cff); /* Gradient od #003cff do #008cff */
+}
+
+
+		.aytab span {
+			padding: 0 5px;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: rgb(189, 199, 208);
+			color: #ffffff;
+			font-size: 14px;
+			font-weight: 500;
+			margin-left: 10px;
+			border-radius: 6px 6px 0 0;
+			cursor: pointer;
+		}
+
+
+		.el-input input {
+			background-color: #fefefe;
+			border: none;
+			border-radius: 0px;
+		}
+
+		.popup_container {
+    position:absolute;
+    z-index: 1000;
+    left:50%;
+    top:0;
+}
+    
+#popup_search_edit {
+    display:none;
+    text-align: center;
+    background-color: #FDFDFD;
+    width:200px;
+    height:150px;
+    position:absolute;
+    left:-100px; top:50px;
+    border:1px solid #B8B8B880;
+    border-radius: 5px;
+    padding: 10px;
+}
+    
+#popup_progress {
+    display:none;
+    text-align: center;
+    background-color: #FDFDFD;
+    width:200px;
+    height:20px;
+    position:absolute;
+    left:-100px; top:100px;
+    border:1px solid #B8B8B880;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 2000;
+}
+#titleBar {
+  position: relative;
+  padding: 5px;
+  margin: 0px;
+  height: 12px;
+  font-weight: bold; /* Make the font bold */
+}
+
+#titleBar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #003cff, #008cff);
+  z-index: -1;
+}
+
+#titleBar span {
+  color: black; /* Set the text color to black */
+}
+#popup_loadscripts {
+    display:none;
+    text-align: center;
+    background-color: #FDFDFD;
+    width:250px;
+    height:220px;
+    position:absolute;
+    left:-125px; top:20px;
+    border:1px solid #B8B8B880;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#popup_proclist {
+    display:none;
+    text-align: center;
+    background-color: #FDFDFD;
+    width:180px;
+    max-height:200px;
+    position:absolute;
+    left:-90px; top:50px;
+    border:1px solid #B8B8B880;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#popup_proclist button {
+    display: block;
+    width: 100%;
+    height: 26px;
+    border-radius: 2px;
+    font-weight:bold;
+    color: black;
+    text-align: left;
+    background-color: #00000005;
+}
+
+table.datatype {
+    border: 1px solid red;
+    border-radius: 2px;
+    border-collapse: collapse;
+    border-style:hidden;
+    box-shadow: 0 0 0 1px #3393EF;
+}
+
+.datatype td {
+    cursor: hand;
+    padding: 5px;
+    color: #3393EF;
+    border: 1px solid #3393EF;
+    width: 22px;
+    height: 15px;
+    text-align: center;
+}
+
+.datatype td.selected {
+    color: white;
+    background-color: #3393EF;
+}
+
+.maskview {
+    display: none;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    filter: alpha(opacity=60);
+    background-color: #777;
+    z-index: 1;
+    opacity:0.5;
+}
+
+#listdiv {
+    display:block;
+    overflow-x:hidden;
+    overflow-y:scroll;
+    height:100%;
+}
+
+#resultList tr.hilight td{
+    color: #3393EF;
+}
+
+#resultList td {
+    border-bottom:solid 1px #D1D1D1;
+}
+#resultList td font {
+    font-size:12px;color:#848484
+}
+
+
+	</style>
+</header>
+
+<body>
+	<div id="app">
+		<div :class="!ifshow?'onlyTitle ayimgui':'ayimgui'" ref="menuMain">
+			<div class="aytitle" @touchstart="titleTouchStart" @touchmove="titleTouchMove">
+				<i :class="ifshow?'el-icon-caret-bottom':'el-icon-caret-top'" @click="ifshow = !ifshow"></i>
+				<span class="title-age" style="margin-left: 5px; color: white;">CRUEX PLUGIN | T.ME/CRUEXGG</span>
+				<i class="titleClose el-icon el-icon-close" @click="closeimgui"></i>
+			</div>
+			<div class="aybody">
+				<div class="aytab">
+					<span @click="changeTab('one')" :style="{ background: tabValue==='one' ? '#0051ff' : '#000000' }">DBDM</span>
+					<span @click="changeTab('two')" :style="{ background: tabValue==='two' ? '#0051ff' : '#000000' }">Nebulous</span>
+					<span @click="changeTab('misc')" :style="{ background: tabValue==='misc' ? '#0051ff' : '#000000' }">MemScan</span>
+					<!-- Dodaj zakładkę Themes -->
+					<span @click="changeTab('misc1')" :style="{ background: tabValue==='misc1' ? '#0051ff' : '#000000' }">Misc</span>
+					<!-- Dodaj zakładkę About -->
+					<span @click="changeTab('about')" :style="{ background: tabValue==='about' ? '#0051ff' : '#000000' }">About</span>
+				</div>
+			
+				<div v-show="tabValue==='one'">
+					<div class="aytext">
+						<br>
+
+						<p>Dead By Daylight Section</p>
+					</div>
+
+                  
+                    <button class="custom-button" onclick="SpeedHackSurvivor()">Speed Hack</button>
+					<button class="custom-button" onclick="DarkIcons()">Dark Icons</button>
+
+				
+				</div>
+
+				<div v-show="tabValue==='misc1'">
+					<div class="aytext">
+						<br>
+
+						<p>Misc Options</p>
+					</div>
+
+                  
+                   
+				<button class="custom-button" onclick="onShowLoadScript(true)">&nbsp;Load Script&nbsp;</button>
+				<button class="custom-button" onclick="onClickMakeTweak()">&nbsp;Make Tweak&nbsp;</button>
+
+
+				
+				</div>
+
+
+						<div v-show="tabValue==='two'">
+					<div class="aytext">
+						<br>
+
+						<p>‎ ‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎  💙Nebulous Plugin Mods💙</p>
+					</div>
+
+				
+						<!-- Przycisk Auto Feed -->
+						<button class="custom-button" onclick="AutoFeed()">Auto Feed</button> 
+				
+						<!-- Przycisk Massacre Mode -->
+						<button class="custom-button" onclick="Massacre()">Massacre Mode</button>
+					
+
+						<!-- Przycisk Big Dots -->
+						<button class="custom-button" onclick="BigDots()">Big Dots</button>
+						<br><br>
+					
+					
+					
+						<!-- Przycisk Speed Hack Blob -->
+						<button class="custom-button" onclick="SpeedHackNebu()">Speed Hack Blob</button>
+					
+				
+				</div>
+
+
+				<div v-show="tabValue==='misc'">
+					<div class="aytext">
+					<!--标题栏-->
+
+    
+
+<!--用一个表格来布局左右两栏-->
+<table id="bodyView" width="100%" style="table-layout:fixed;height: calc(100% - 22px) ;">
+<tr>
+<td style="vertical-align:top;width:135px;border-right:solid 2px #035bff;">
+<div>
+MEM(START):<input id="range_min" style="width:80px;padding-left:0" value="0x100000000" />
+<br/>
+MEM(END):<input id="range_max" style="width:80px;padding-left:0"  value="0x200000000" />
+<br/>
+<label><input type=radio name="numtype" value="signed" checked />Signed</label>
+<label><input type=radio name="numtype" value="unsigned" />UnSigned</label>
+<br/>
+<button class="custom-button" onclick="onClickSearchNumber()">Search</button>
+<br/>
+<button class="custom-button" onclick="onClickClearResults()">Clear</button>
+<button class="custom-button" onclick="onClickEditAll()">EditAll</button>
+<button class="custom-button" onclick="onClickRefreshResults()">Refresh</button>
+<br/><br>
+
+FloatTolerance:<input id="float_tolerance" style="width:50px" value="0.0"/>
+<br/>
+<p id="results_count" style="display:none">Results Count:<span>0</span></p>
+</div>
+</td>
+<td style="vertical-align:top;">
+<div id="listdiv" class="scrollbar" ontouchend="showMoreResults(this);">
+<table id="resultList" style="width:100%;cursor:hand;">
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>1.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>2.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>3.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>4.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>5.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>6.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>7.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>8.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>9.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>10.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>11.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>12.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>13.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>14.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>15.0x102345678<br/><font>112233</td></tr>
+<tr address="0x012345678" datatype="F64" datavalue="123"><td>16.0x102345678<br/><font>0.112233112233112233112233112233112233</td></tr>
+</table>
+</div>
+
+</td>
+</tr>
+</table>
+
+<!--全局灰色遮罩层(弹出搜索框的时候用)-->
+<div id="maskview" class="maskview"></div>
+
+<!--全屏居中布局层-->
+<div class="popup_container">
+    
+<div id="popup_search_edit">
+<B id="titleBar">Search Number</B>
+<br/><br/>
+<center>
+<table id="datatype" class="datatype">
+<tr>
+<td>F32</td><td>F64</td><td>I8</td><td>I16</td><td class="selected">I32</td><td>I64</td>
+</tr>
+</table>
+</center>
+<br/>
+<input type="text" id="datavalue" style="width:100%; border:none" placeholder="Number" />
+<hr/>
+<button id="cancel">Cancel</button>
+&nbsp;&nbsp;&nbsp;
+<button id="action">Search</button>
+</div>
+
+
+<!--居中的加载脚本窗口,默认隐藏-->
+<div id="popup_loadscripts" class="popup_view3">
+<center>
+<div class="menubox current" menu="localjs" onclick="refreshLocalSrcipts()">Local ⟳</div>
+<div class="menubox" menu="netjs">Network</div>
+<div style="float:right; font-size:16px; font-family: Arial, sans-serif;" onclick="onShowLoadScript(false)">&nbsp;X&nbsp;</div>
+</center>
+<hr/>
+<div id="localjs" class="menuview current scrollbar" style="height:190px">
+<table id="localjslist" style="width:100%;" border="1" cellspacing=0 cellpadding=0>
+<tr><td style="border-right-style:none; color:blue">选择其他位置</td><td style="border-left-style:none;width:45px"><button>浏览</button></td></tr>
+<tr><td style="border-right-style:none;">测试脚本1.js</td><td style="border-left-style:none;width:45px"><button>加载</button></td></tr>
+<tr><td style="border-right-style:none;">测试脚本1.js</td><td style="border-left-style:none;width:45px"><button>加载</button></td></tr>
+<tr><td style="border-right-style:none;">测试脚本1.js</td><td style="border-left-style:none;width:45px"><button>加载</button></td></tr>
+<tr><td style="border-right-style:none;">测试脚本1.js</td><td style="border-left-style:none;width:45px"><button>加载</button></td></tr>
+<tr><td style="border-right-style:none;">测试脚本1.js</td><td style="border-left-style:none;width:45px"><button>加载</button></td></tr>
+<tr><td style="border-right-style:none;">测试脚本1.js</td><td style="border-left-style:none;width:45px"><button>加载</button></td></tr>
+<tr><td style="border-right-style:none;">测试脚本1.js</td><td style="border-left-style:none;width:45px"><button>加载</button></td></tr>
+<tr><td style="border-right-style:none;">测试脚本1.js</td><td style="border-left-style:none;width:45px"><button>加载</button></td></tr>
+<tr><td style="border-right-style:none;">测试脚本1.js</td><td style="border-left-style:none;width:45px"><button>加载</button></td></tr>
+<tr><td style="border-right-style:none;">测试脚本1.js</td><td style="border-left-style:none;width:45px"><button>加载</button></td></tr>
+</table>
+</div>
+<div id="netjs" class="menuview">
+<br/><br/>
+<input id="netjsurl" style="width:100%" placeholder="URL start with http/https" />
+<br/><br/><br/>
+<hr/>
+<button onclick="onClickLoadScript($('#netjsurl').val(), 'js')">Load JS</button>
+<button onclick="onClickLoadScript($('#netjsurl').val(), 'h5');">Load HTML</button>
+</div>
+
+<!--运行脚本灰色遮罩层(执行脚本时用)-->
+<div id="maskview_script" class="maskview"></div>
+
+</div>
+
+<!--居中的提示框, 默认隐藏-->
+<div id="popup_progress">
+<center>
+    Running...
+</center>
+</div>
+
+<div id="popup_proclist">
+<center>
+Select Target
+<hr/>
+<div id="proctable" class="scrollbar" style="min-height:50px; max-height:170px">
+<button>Process1</button>
+<button>Process2</button>
+<button>Process3</button>
+<button>Process4</button>
+<button>Process5</button>
+<button>Process6</button>
+<button>Process7</button>
+<button>Process8</button>
+</div>
+</center>
+</div>
+
+
+		</div>
+	</div>   
+
+	<script>
+
+var h5gg_jquery_stub;
+
+if(typeof $ == 'undefined')
+    document.write("<script src=\"https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js\"><\/script>");
+
+//根据选择的有符号/无符号数确定搜索类型
+function h5ggType(type)
+{
+    if($("input:radio[name=numtype]:checked").val()=="unsigned") {
+        switch(type) {
+            case "I8":
+                return "U8";
+            case "I16":
+                return "U16";
+            case "I32":
+                return "U32";
+            case "I64":
+                return "U64";
+        }
+    }
+    
+    return type;
+}
+
+    
+//页面显示完毕事件
+document.addEventListener("DOMContentLoaded", function(){
+
+    if(typeof $ == 'undefined') {
+        alert("jquery load failed!");
+        return;
+    }
+
+    /*禁止文本选择和拖动*/
+    document.body.onselectstart = document.body.ondrag = function(){
+        return false;
+    }
+    //文本框等输入完毕后页面自动滚动到顶部
+    $("input").blur(function(){
+        window.scroll(0,0);
+    });
+    
+    //激活webkit的button:active
+    document.body.addEventListener('touchstart', function () {});
+    
+    //绑定菜单点击切换子页面
+    $("div.menubox").unbind('click').click(function(){
+        $("div.menubox").removeClass("current");
+        $("div.menuview").removeClass("current");
+        $(this).addClass("current");
+        
+        var menuid = $(this).attr("menu");
+        $("div#"+menuid).addClass("current");
+    });
+    
+    $("#datavalue").focus(function(){
+        var input = $(this);
+        input.attr("type","number");
+        setTimeout(function(){
+            input.attr("type","text");
+        }, 500);
+    });
+    
+    
+    $("#crossproc").click(function() {
+        $("#popup_proclist").show();
+        $("#maskview").show();
+    });
+        
+    if(typeof h5gg!='undefined')
+    {
+        
+        $("#version").text(h5gg_internel_version);
+        
+        //清除设计演示的结果列表
+        onClickClearResults();
+    
+        //设置标题栏区域可拖动悬浮窗
+        setWindowDrag(0, 0, 400, 80);
+        
+        //布局调整函数
+        setLayoutAction(function(w,h) {
+            var width = 370; var height = 370; //默认尺寸
+            if(w<h) {
+                height = 600; //竖屏模式加大显示高度
+            }
+            width = Math.min(width, w); //适配iPad浮窗, 最大宽度不超出
+            height = Math.min(height, h); //适配老设备, 最大高度不超出
+            var x = (w-width)/2;
+            var y = (h-height)/2;
+            if(w<h) {
+                y = Math.max(20, y);
+                height = Math.min(height, h-y);
+            }
+            setWindowRect(x,y,width,height);
+        });
+
+        var checkprocs = function()
+        {
+            var procs = h5gg.getProcList();
+            if(procs)  //不为空(null)说明是具有跨进程权限
+            {
+                refreshProcList(procs);
+                $("#crossproc").show();
+                $("#closeMenu").hide();
+                
+                if(!$("#procname").attr('pid')) {
+                    $("#popup_proclist").show();
+                    $("#maskview").show();
+                    $("#procname").text('');
+                }
+                
+                setInterval(function(){
+                    if($("#popup_proclist").is(":visible"))
+                        refreshProcList(h5gg.getProcList());
+
+                    if($("#procname").attr('pid'))
+                    {
+                        var procs = h5gg.getProcList();
+                        var alive = false;
+                        for(var i=0; i<procs.length; i++) {
+                            if(procs[i].pid == $("#procname").attr('pid')) {
+                                alive=true;
+                                break;
+                            }
+                        }
+                        
+                        if(!alive) {
+                            alert("Target process terminated\n\nPlease click on the title bar to select a new target");
+                            $("#procname").removeAttr('pid');
+                            $("#procname").text('');
+                        }
+                    }
+                    
+                }, 1500);
+                
+            } else  {
+                $("#crossproc").hide();
+            }
+            
+        }; //end of checkprocs
+        
+        checkprocs();
+        //setInterval(checkprocs, 1500);
+    
+    } //end of h5gg check
+    
+    //点击结果列表里面的地址时弹出修改窗口, 要在listdiv刷新html之后绑定
+    $("table#resultList").on('click','tr', function()
+    {
+        $("table#resultList tr").removeClass("hilight");
+        $(this).addClass("hilight");
+        
+        var address = $(this).attr("address");
+        var datatype = $(this).attr("datatype");
+        var datavalue = $(this).attr("datavalue");
+        
+        //读取该地址最新数据
+        if(typeof h5gg!='undefined')
+            datavalue = h5gg.getValue(address, h5ggType(datatype));
+        
+        showPopView("&nbsp;&nbsp;Edit&nbsp;&nbsp;", function(type, value){
+            
+            if(!h5gg.setValue(address, value, h5ggType(type))) {
+                alert("The modification failed, the address may be invalid!");
+            }
+            
+            onClickRefreshResults();
+            
+        }, datatype, datavalue);
+    });
+});
+
+function refreshProcList(procs)
+{
+    $("#proctable button").remove();
+    
+    for(var i=0; i<procs.length; i++) {
+        var proc = procs[i];
+        var btn = $("<button>"+proc.name+"</button>");
+        btn.attr("pid", proc.pid);
+        btn.click(function()
+        {
+            if(!h5gg.setTargetProc($(this).attr('pid'))) {
+                alert("Cannot Select Target!");
+                return;
+            }
+            
+            onClickClearResults();
+            
+            $("#procname").attr('pid', $(this).attr('pid'));
+            $("#procname").text($(this).text());
+            $("#popup_proclist").hide();
+            $("#maskview").hide();
+        });
+        
+        $("#proctable").append(btn);
+    }
+}
+
+function refreshLocalSrcipts()
+{
+    $("table#localjslist tr").remove();
+    
+    var jsfiles = h5gg.getLocalScripts();
+
+    setTimeout(function(){
+        
+        if(jsfiles.length==0) {
+            $("table#localjslist tbody").append("<tr><td colspan=2>Searching App's Documents Directory...<br/>Searching .app Bundle Directory...<br/>No (*.js) or (*.html) files found!</td></td>");
+        }
+        
+        $("table#localjslist tbody").append('<tr><td style="border-right-style:none; color:blue">Browser on File App</td><td style="border-left-style:none;width:45px"><button onclick="h5gg.pickScriptFile(onClickLoadScript)">Load</button></td></tr>');
+        
+        for(var i=0; i<jsfiles.length; i++) {
+            var row = '<tr><td style="border-right-style:none;font-weight:bold;color:green">'+jsfiles[i].name+'</td><td style="border-left-style:none;width:45px"><button onclick="onClickLoadScript(\''+jsfiles[i].path+'\')">Load</button></td></tr>';
+            $("table#localjslist tbody").append(row);
+        }
+    }, 300);
+}
+
+function onShowLoadScript(show)
+{
+    if(show) {
+        $("#maskview").show();
+        $("#popup_loadscripts").show();
+        
+        if(typeof h5gg!='undefined') refreshLocalSrcipts();
+    } else {
+        $("#maskview").hide();
+        $("#popup_loadscripts").hide();
+    }
+}
+
+function onClickLoadScript(url, type)
+{
+    if(!url) return;
+    
+    if(/^\w+\:/.test(url)==false) url = "file://"+url;
+    
+    try{
+        url = new URL(url);
+        url.searchParams.append("_", Math.random());
+    }catch(e){
+        alert("invliad URL!");
+        return;
+    }
+    
+    $("#popup_progress").show();
+    $("#maskview_script").show();
+    
+    if(type=='h5' || (!type&&!/\.js$/.test(url.pathname))) {
+        window.location = url.href;
+        return;
+    }
+    
+    var script = document.createElement("script");
+
+    script.type = "text/javascript";
+    
+    script.onload = function () {
+      alert("JS Run Complete!");
+        $("#popup_progress").hide();
+        $("#maskview_script").hide();
+    };
+    
+    script.onerror = function () {
+        alert("Load Error!\nURL Invalid or Network Exception!");
+        $("#popup_progress").hide();
+        $("#maskview_script").hide();
+    };
+
+    script.src = url.href;
+    document.body.appendChild(script);
+}
+
+
+//弹出搜索或修改窗口
+function showPopView(name, action, type, value)
+{
+    $("#maskview").show();
+    $("#popup_search_edit").show();
+    $("#popup_search_edit").find("B#titleBar").html(name);
+    $("#popup_search_edit").find("button#action").html(name);
+    
+    if(type) {
+        $("table#datatype td").each(function(){
+            if($(this).text()==type)
+                $(this).addClass("selected");
+            else
+                $(this).removeClass("selected");
+        });
+    }
+    
+    if(value) {
+        $("input#datavalue").val(value);
+    }
+    
+    $("input#datavalue").focus();
+    
+    $("#popup_search_edit").find("button#action").unbind("click").click(function(){
+        var type = $("table#datatype td.selected").text();
+        var value = $("input#datavalue").val();
+        
+        $("#popup_search_edit").hide();
+        $("#popup_progress").show();
+        
+        setTimeout(function() {
+            
+            action(type, value);
+            
+            $("#popup_progress").hide();
+            $("#maskview").hide();
+        }, 200);
+        
+    });
+    
+    $("#popup_search_edit").find("button#cancel").unbind("click").click(function(){
+        $("#maskview").hide();
+        $("#popup_search_edit").hide();
+    });
+    
+    $("table#datatype td").unbind("click").click(function(){
+        $("table#datatype td").removeClass("selected");
+        $(this).addClass("selected");
+        $("input#datavalue").focus();
+    });
+}
+
+function onClickClearResults()
+{
+    $("input#datavalue").val("");
+    $("#results_count").hide();
+    $("table#resultList tr").remove();
+    $("table#resultList").attr("currentCount", 0);
+    if(typeof h5gg!='undefined') h5gg.clearResults();
+}
+
+function loadResults(from, count)
+{
+    var maxCount = count;
+    var skipCount = from;
+    
+    var results = h5gg.getResults(maxCount, skipCount);
+    
+    //alert("count"+count+":"+results.length+":"+results[0].address);
+    
+    for(var i=0; i<results.length; i++)
+    {
+        if(results[i].type=='F32' || results[i].type=='F64')
+            results[i].value = '('+results[i].value+')';
+        var row = '<tr address="'+results[i].address+'" datatype="'+results[i].type+'" datavalue="'+results[i].value+'"><td>'+(from+i+1)+'. '+results[i].address+'<br/><font>'+results[i].value+'</font></td></tr>';
+        
+        $("table#resultList tbody").append(row);
+    }
+}
+
+function onClickRefreshResults(clean)
+{
+   $("table#resultList tr").remove();
+   
+   if(clean) {
+       $("#listdiv").get(0).scroll(0,0);
+       $("table#resultList").attr("currentCount", 0);
+   }
+
+    var count = h5gg.getResultsCount();
+    $("#results_count").text("Results Count: "+count);
+    $("#results_count").show();
+    
+    var currentCount = Number($("table#resultList").attr("currentCount"));
+    if(isNaN(currentCount) || currentCount==0) {
+        currentCount = 100;
+        $("table#resultList").attr("currentCount", 100);
+    }
+    
+    loadResults(0, currentCount);
+}
+
+function loadMoreResults() {
+    console.log("load more data!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+Math.random());
+    
+    //当前显示数量
+    var currentCount = Number($("table#resultList").attr("currentCount"));
+    
+    //每次增加显示100条
+    $("table#resultList").attr("currentCount", currentCount+100);
+    
+    loadResults(currentCount, 100);
+}
+
+function showMoreResults(div)
+{
+    var lh = div.scrollHeight - div.scrollTop;
+    console.log(div.clientHeight+","+div.offsetHeight +" : " +div.scrollTop+","+div.scrollHeight + " : " + lh);
+    
+    if(lh <= div.clientHeight) {
+        console.log("trigger bottom!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        loadMoreResults();
+    }
+}
+
+function onClickEditAll()
+{
+    /*
+    if($("table#resultList tr").length==0) {
+        alert("没有可修改的数据");
+        return;
+    }*/
+    
+    showPopView("EditAll", function(type, value){
+
+        var count = h5gg.editAll(value, h5ggType(type));
+        
+        onClickRefreshResults();
+        
+        alert("Success to modify count: "+count);
+    });
+}
+
+function onClickSearchNumber()
+{
+    showPopView("Search Number", function(type, value) {
+        
+        h5gg.setFloatTolerance($("#float_tolerance").val());
+        
+        var memoryFrom = $("input#range_min").val();
+        var memoryTo = $("input#range_max").val();
+        h5gg.searchNumber(value, h5ggType(type), memoryFrom, memoryTo);
+        
+        onClickRefreshResults(true);
+    });
+}
+
+function onClickSearchNearby()
+{
+    /*
+    if($("table#resultList tr").length==0) {
+        alert("没有可继续搜索的数据");
+        return;
+    }*/
+    
+    showPopView("Nearby Search", function(type, value){
+        
+        h5gg.setFloatTolerance($("#float_tolerance").val());
+        
+        var nearbyRange = $("input#nearby_range").val();
+        h5gg.searchNearby(value, h5ggType(type), nearbyRange);
+        
+        onClickRefreshResults(true);
+    });
+}
+    
+function onClickMakeTweak()
+{
+    alert("Make your custom dylib\n\nStep 1: Select a picture file for float button");
+    h5gg.pickScriptFile(function(icon){
+        
+        alert("Step 2: Select a html file that needs to load automatically");
+        
+        h5gg.pickScriptFile(function(html) {
+            
+            alert(h5gg.makeTweak(icon, html));
+            
+        }, ["public.html"]);
+        
+    }, ["public.image"]);
+}
+
+
+function DarkIcons()
+{
+//DARK ICONS
+h5gg.clearResults();
+h5gg.searchNumber('2.20000004768', 'F32', '0x100000000', '0x200000000');
+h5gg.editAll("3", 'I64');
+h5gg.clearResults();
+alert("Dark Icons ");
+/////////////////
+
+}
+
+
+function SpeedHackNebu()
+{
+	alert("Speed Hack Blob");
+h5gg.clearResults();
+h5gg.searchNumber('2.23606801033', 'F32', '0x100000000', '0x200000000');
+h5gg.editAll("15", 'F32');
+h5gg.clearResults();
+/////////////////
+
+}
+
+
+
+function Massacre() {
+    alert("🐝💛Working Only in Normal Map Size💛🐝");
+    h5gg.clearResults();
+	h5gg.setFloatTolerance('1.0'); //Set the deviation range of F32/F64 floating-point search, the engine defaults to 0.0
+    h5gg.searchNumber('703.42224121094', 'F32', '0x100000000', '0x200000000');// Wyszukiwanie zmiennoprzecinkowej wartości
+    h5gg.editAll('88', 'F32'); // Zmiana wartości na 88
+    h5gg.clearResults();
+    alert("🐝💛Massacre Mode💛🐝");
+}
+
+
+function BigDots() {
+    alert("Big Dots");
+    h5gg.clearResults();
+    h5gg.searchNumber('1.11803400517', 'F32', '0x100000000', '0x200000000');// Wyszukiwanie zmiennoprzecinkowej wartości
+    h5gg.editAll('16', 'F32'); 
+    h5gg.clearResults();
+}
+
+
+function BigIndicator() {
+    alert("Big Blob Indicator");
+    h5gg.clearResults();
+	h5gg.setFloatTolerance('1.0');
+    h5gg.searchNumber('11.23999977112', 'F32', '0x0', '0x400000000');// Wyszukiwanie zmiennoprzecinkowej wartości
+    h5gg.editAll('500', 'F32'); 
+    h5gg.clearResults();
+}
+
+
+
+
+
+
+
+
+
+function AutoFeed() {
+    alert("Auto Feed !");
+    h5gg.clearResults();
+    h5gg.setFloatTolerance('1.0');
+    h5gg.searchNumber('4.024922', 'F32', '0x100000000', '0x120000000');
+    
+    var results = h5gg.getResults(15, 'SkipCount');
+    
+    for (var i = 0; i < results.length; i++) {
+        var result = results[i];
+        var address = result.address;
+        
+        if (address && address.endsWith("950")) {
+            if (h5gg.setValue(address, '2000', 'F32')) {
+                alert("Value modified at address: " + address);
+            }
+        }
+    }
+    
+    h5gg.clearResults();
+}
+
+function SpeedHackSurvivor() {
+	alert("💙 Speed Set To 🦈");
+    h5gg.clearResults();
+    h5gg.searchNumber('4934256342874980352', 'I32', '0x100000000', '0x200000000');
+    var tmp = h5gg.getResults(h5gg.getResultCount());
+    var n = h5gg.getResultsCount();
+
+    for (var i = 0; i < n; i++) {
+        var result = tmp[i];
+        var address = result.address - 508;
+        
+        // Ustaw nową wartość prędkości na adresie
+        h5gg.setValue(address, 2000, 'I32');
+    }
+
+    alert("💙 Speed Set To 🦈");
+    h5gg.clearResults();
+}
+
+
+function SpeedHackSurvivor2() {
+//DARK ICONS
+h5gg.clearResults();
+h5gg.searchNumber('4934256342874980352', 'I32', '0x100000000', '0x200000000');
+h5gg.editAll("999", 'F32');
+h5gg.clearResults();
+alert("Speed Hack Activated");
+/////////////////
+}
+		var app = new Vue({
+			el: "#app",
+			data() {
+				return {
+					ifshow: true,
+					checked: false,
+					radio: '1',
+					activeSelect: '',
+					selectOption: [{
+						value: 'Option1',//实际内容
+						label: 'golden'//显示文案
+					}, {
+						value: 'Option2',
+						label: 'eggs'
+					}],
+					input: "",
+					showOption: false,
+					tabValue: "one",
+				}
+			},
+			mounted() {
+				this.setRect(360, 320);
+
+				//设置不可拖动
+				setWindowDrag(0, 0, 0, 0);
+    
+				var layout = function()
+				{
+					//window.orientation是设备握持方向, 不是屏幕显示方向
+					if(window.lastorientation==window.orientation) return;
+					window.lastorientation=window.orientation;
+				
+					//window.screen中的宽高不会随着屏幕旋转更新(只会在初始化的时候固定)
+					if(Math.abs(window.orientation)==90) {
+						//横屏模式
+						setWindowRect(0,0,window.screen.height,window.screen.width);
+					} else {
+						//竖屏模式
+						setWindowRect(0,0,window.screen.width,window.screen.height);
+					}
+				}
+	
+				layout(); //设置旋转屏幕时自动调整布局和画布
+				window.addEventListener("orientationchange", layout, false);
+
+				setButtonAction(function () {
+					var menu = document.querySelector("#app");
+					if (menu.style.display == 'none') {
+						menu.style.display = 'block';
+						//显示菜单之后, 设置触控不可穿透悬浮窗口
+						setWindowTouch(true);
+					} else {
+						menu.style.display = 'none';
+						//隐藏菜单之后, 设置触控穿透悬浮窗口
+						setWindowTouch(false);
+					}
+				});
+			},
+			methods: {
+				setRect(w, h, x = -1, y = -1) {
+					var boxW = w;
+					var boxH = h;
+
+					var ayMenu = this.$refs.menuMain;
+					ayMenu.style.width = `${boxW}px`;
+					ayMenu.style.height = `${boxH}px`;
+					if (x == -1) ayMenu.style.left = `calc(50% - ${boxW / 2}px)`;
+					if (y == -1) ayMenu.style.top = `calc(50% - ${boxH / 2}px)`;
+				},
+				titleTouchStart(event) {
+					this.touchStartX = parseInt(event.touches[0].clientX);
+					this.touchStartY = parseInt(event.touches[0].clientY);
+
+					var ayMenu = this.$refs.menuMain;
+					this.menuLastX = ayMenu.offsetLeft;
+					this.menuLastY = ayMenu.offsetTop;
+				},
+				titleTouchMove(event) {
+					event.preventDefault();
+					var distanceX = event.touches[0].clientX - this.touchStartX;
+					var distanceY = event.touches[0].clientY - this.touchStartY;
+
+					var ayMenu = this.$refs.menuMain;
+					ayMenu.style.left = this.menuLastX + distanceX + "px";
+					ayMenu.style.top = this.menuLastY + distanceY + "px";
+				},
+				//切换导航栏
+				changeTab(v) {
+					this.tabValue = v;
+				},
+				closeimgui() {
+					var menu = document.querySelector("#app");
+					menu.style.display = 'none';
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>
